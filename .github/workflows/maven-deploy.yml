@@ -1,12 +1,11 @@
 name: Continuous Delivery with GitHub Packages (Maven)
 
 on:
-  release:
   
   workflow_dispatch:
 
 jobs:
-  deploy:
+  build:
     name: Build Java application
     runs-on: ubuntu-latest
     steps:
@@ -20,8 +19,25 @@ jobs:
     - name: Build native with Maven
       run: mvn test
     - name: Build native with Maven
-      run: mvn -Dskip.tests package
-    - name: Publish package
-      run: mvn --batch-mode -Dskip.tests deploy
-      env:
-        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      run: mvn -DskipTests package
+    - name: Upload JAR
+      uses: actions/upload-artifact@v3
+      with:
+        name: lib
+        retention-days: 1
+        path: |
+          target/*.jar
+          pom.xml
+
+  deploy:
+    name: Build Java application
+    runs-on: ubuntu-latest
+    steps:
+      - name: Download JAR
+        uses: actions/download-artifact@v3
+        with:
+          name: lib
+      - name: Publish package
+        run: mvn --batch-mode -DskipTests deploy
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
