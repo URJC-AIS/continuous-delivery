@@ -1,7 +1,6 @@
 name: Continuous Delivery with GitHub Packages (Maven)
 
 on:
-  
   workflow_dispatch:
 
 jobs:
@@ -16,9 +15,9 @@ jobs:
       with:
         distribution: 'adopt'
         java-version: '17'
-    - name: Build native with Maven
+    - name: Run tests
       run: mvn test
-    - name: Build native with Maven
+    - name: Build artifact
       run: mvn -DskipTests package
     - name: Upload JAR
       uses: actions/upload-artifact@v3
@@ -30,7 +29,7 @@ jobs:
           pom.xml
 
   deploy:
-    name: Build Java application
+    name: Deploy Maven artifact
     runs-on: ubuntu-latest
     needs: [build]
     steps:

@@ -1,0 +1,21 @@
+name: Continuous Delivery with GitHub Packages (Maven) - Simple
+
+on:
+  workflow_dispatch:
+
+jobs:
+  build-and-deploy:
+    name: Build Java application
+    runs-on: ubuntu-latest
+    steps:
+    - name: Clone repository
+      uses: actions/checkout@v2
+    - name: Set up JDK 17
+      uses: actions/setup-java@v2
+      with:
+        distribution: 'adopt'
+        java-version: '17'
+    - name: Publish package
+      run: mvn --batch-mode deploy
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
