@@ -1,4 +1,4 @@
-name: Continuous Delivery with GitHub Packages (Maven) - Simple
+name: Simple Continuous Delivery with GitHub Packages (Maven)
 
 on:
   workflow_dispatch:
